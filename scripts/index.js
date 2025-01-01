@@ -92,7 +92,7 @@ const displayAllPets = (data) => {
                     </span>
                     <hr class="border-1 my-2">
                     <div class="card-actions flex justify-between">
-                        <button class="border btn rounded-lg px-4 py-1"><img class="w-8" src="https://img.icons8.com/?size=100&id=CdM0CVTrcHP0&format=png&color=000000"/> </button>
+                        <button onclick="displayLikedPicture(${item.petId})" class="border btn rounded-lg px-4 py-1"><img class="w-8" src="https://img.icons8.com/?size=100&id=CdM0CVTrcHP0&format=png&color=000000"/> </button>
                         <button class="text-2xl pet-text-primary font-bold border rounded-lg px-4 py-1">Adopt</button>
                         <button onclick="showDetails(${item.petId})" class="text-2xl pet-text-primary font-bold border rounded-lg px-4 py-1">Details</button>
                     </div>
@@ -108,7 +108,6 @@ const displayAllPets = (data) => {
 const showDetails = async (petId) => {
     const response = await fetch(`https://openapi.programming-hero.com/api/peddy/pet/${petId}`);
     const data = await response.json();
-    console.log(data.petData);
 
     const {image,breed,date_of_birth,gender,pet_details,price,vaccinated_status,pet_name}  = data.petData;
 
@@ -159,6 +158,20 @@ const showDetails = async (petId) => {
     `;
 
     my_modal.showModal();
+}
+
+const displayLikedPicture = async(petId) =>{
+    const response = await fetch(`https://openapi.programming-hero.com/api/peddy/pet/${petId}`);
+    const data = await response.json();
+    
+
+    const likedPetsContainer = document.getElementById('liked-pets');
+    const pics = document.createElement('div');
+    pics.classList = "p-2 rounded-xl";
+    pics.innerHTML = `
+        <img class="rounded-lg" src=${data.petData.image} alt="pet"/>
+    `;
+    likedPetsContainer.append(pics);
 }
 
 loadCategories();
