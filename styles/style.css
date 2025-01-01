@@ -1,0 +1,18 @@
+.font-lato{
+    font-family: "Lato", serif;
+}
+
+.pet-btn-primary{
+    background-color: #0E7A81;
+    color: white;
+    padding: 5px 25px;
+}
+
+.pet-btn-primary:hover{
+    border:1px solid #0E7A81;
+    background-color: #0e79814d;
+}
+
+.pet-text-primary{
+    color: #0E7A81;
+}
