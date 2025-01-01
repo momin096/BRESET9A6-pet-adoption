@@ -16,3 +16,7 @@
 .pet-text-primary{
     color: #0E7A81;
 }
+
+.modal-border{
+    border:1px solid #0E7A81 ;
+}

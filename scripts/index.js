@@ -56,7 +56,7 @@ const displayAllPets = (data) => {
 
         `;
     }
-    else{
+    else {
         document.getElementById('best-deal').innerHTML = `
             <h2 class="text-xl font-extrabold">Best Deal For you</h2>
             <button class="btn pet-btn-primary hover:text-gray-800">Sort by Price</button>
@@ -65,7 +65,7 @@ const displayAllPets = (data) => {
     }
     data.forEach(item => {
         const card = document.createElement('div');
-        
+
         // console.log(item.petId)
         card.innerHTML = `
             <div class="card bg-base-100 border rounded-2xl px-3 py-3">
@@ -94,16 +94,72 @@ const displayAllPets = (data) => {
                     <div class="card-actions flex justify-between">
                         <button class="border btn rounded-lg px-4 py-1"><img class="w-8" src="https://img.icons8.com/?size=100&id=CdM0CVTrcHP0&format=png&color=000000"/> </button>
                         <button class="text-2xl pet-text-primary font-bold border rounded-lg px-4 py-1">Adopt</button>
-                        <button class="text-2xl pet-text-primary font-bold border rounded-lg px-4 py-1">Details</button>
+                        <button onclick="showDetails(${item.petId})" class="text-2xl pet-text-primary font-bold border rounded-lg px-4 py-1">Details</button>
                     </div>
                 </div>
             </div>
         `;
-        
+
         petsContainer.append(card);
 
     })
 };
+
+const showDetails = async (petId) => {
+    const response = await fetch(`https://openapi.programming-hero.com/api/peddy/pet/${petId}`);
+    const data = await response.json();
+    console.log(data.petData);
+
+    const {image,breed,date_of_birth,gender,pet_details,price,vaccinated_status,pet_name}  = data.petData;
+
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = `
+        <dialog id="my_modal" class="modal ">
+            <div class="modal-box max-h-screen w-auto max-w-2xl ">
+                <figure class="mb-2 flex justify-center h-5/6 items-center">
+                    <img src=${image} alt="Pets"  class="rounded-xl w-full object-cover" />
+                </figure>
+                <div class="">
+                    <h2 class="text-xl font-bold">${pet_name}</h2>
+                    <div class="grid grid-cols-2 gap-x-3">
+                        <span class="flex items-center gap-1 text-gray-500">
+                            <img src="./icons/breed.svg" />
+                            Breed: ${breed ? breed : 'No Data'}
+                        </span>
+                        <span class="flex items-center gap-1 text-gray-500">
+                            <img src="./icons/date.svg" />
+                            Birth: ${date_of_birth ? date_of_birth : 'No Data'}
+                        </span>
+                        <span class="flex items-center gap-1 text-gray-500">
+                            <img src="./icons/gender.svg" />
+                            Gender: ${gender ? gender : 'No Data'}
+                        </span>
+                        <span class="flex items-center gap-1 text-gray-500">
+                            <img src="./icons/dollar.svg" />
+                            Price: ${price ? price : 'Up Coming'}$
+                        </span>    
+                        <span class="flex items-center gap-1 text-gray-500">
+                            <img src="./icons/gender.svg" />
+                            Vaccinated status: ${vaccinated_status ? vaccinated_status : 'N/A'} 
+                        </span>    
+
+                    </div>
+                
+                <hr class="border-2 my-3">
+                <p class="font-bold">Details Information</p>
+                <p class="text-gray-600 font-light">${pet_details}</p>
+                <div class="my-2">
+                    <form method="dialog flex">
+                        <!-- if there is a button, it will close the modal -->
+                        <button class="btn w-full pet-text-primary modal-border bg-[#0e79814d]">Close</button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
+    `;
+
+    my_modal.showModal();
+}
 
 loadCategories();
 loadAllPets();
