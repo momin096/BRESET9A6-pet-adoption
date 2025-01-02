@@ -12,11 +12,65 @@ const loadCategories = async () => {
     displayCategories(data.categories);
 }
 
+// const loadAllPets = async () => {
+//     const response = await fetch('https://openapi.programming-hero.com/api/peddy/pets');
+//     const data = await response.json();
+//     displayAllPets(data.pets);
+// }
+
+// console.log(loadAllPets);
+
+
+// const loadAllPets = async () => {
+//     const response = await fetch('https://openapi.programming-hero.com/api/peddy/pets');
+//     const data = await response.json();
+
+//     // Sort pets by price (ascending order)
+//     const sortedPets = data.pets.sort((a, b) => {
+//         const priceA = a.price ? parseFloat(a.price) : Infinity; // যদি মূল্য না থাকে, তা Infinity ধরে নেই
+//         const priceB = b.price ? parseFloat(b.price) : Infinity;
+//         return priceA - priceB; // Ascending order
+//     });
+//     console.log(sortedPets);
+//     displayAllPets(sortedPets);
+// }
+
+
+
+// siyam ahmed update code started 
+
+//  all pets data load 
+
+let allPets = []; // Global variable to store all pets
+
 const loadAllPets = async () => {
     const response = await fetch('https://openapi.programming-hero.com/api/peddy/pets');
     const data = await response.json();
-    displayAllPets(data.pets);
+
+    allPets = data.pets; // Store all pets in the global variable
+    displayAllPets(allPets); // Display unsorted pets initially
 }
+
+
+
+// Sort by price and update the display
+const sortPetsByPrice = () => {
+    const sortedPets = [...allPets].sort((a, b) => {
+        const priceA = a.price ? parseFloat(a.price) : Infinity;
+        const priceB = b.price ? parseFloat(b.price) : Infinity;
+        return priceB - priceA; // Ascending order
+    });
+    console.log(sortedPets);
+    displayAllPets(sortedPets);
+}
+
+// Event listener for the button
+document.getElementById('sort-by-price').addEventListener('click', () => {
+    sortPetsByPrice();
+});
+
+// Call the load function to load pets on page load
+loadAllPets();
 
 
 
@@ -32,9 +86,9 @@ const loadCategoryPets = async (id) => {
     activeBtn.classList.add('bg-[#0e79814d]');
     activeBtn.classList.add('modal-border');
     document.getElementById('loading').classList.add('hidden');
+
     displayAllPets(data.data);
 
-    
 }
 
 const loadCategoryPetsLoading = (id) => {
@@ -44,10 +98,10 @@ const loadCategoryPetsLoading = (id) => {
     }, 2000);
 };
 
-const removeActiveClass = () =>{
+const removeActiveClass = () => {
     const buttons = document.getElementsByClassName('category-btn');
 
-    for(let btn of buttons){
+    for (let btn of buttons) {
         btn.classList.remove('rounded-full');
         btn.classList.remove('bg-[#0e79814d]');
         btn.classList.remove('modal-border');
@@ -57,13 +111,13 @@ const removeActiveClass = () =>{
 
 const displayCategories = (categories) => {
     const categoryContainer = document.getElementById('category-container');
-    categories.forEach(item => {
+    categories.forEach(category => {
         // create button
         const buttonContainer = document.createElement('div');
         buttonContainer.innerHTML = `
-            <div id="${item.id}" onclick="loadCategoryPetsLoading(${item.id})" class="category-btn flex gap-2 items-center justify-center border px-12 py-3 rounded-md ">
-                <img class="w-8" src=${item.category_icon}/>
-                <button   class="category-btn text-2xl font-semibold ">${item.category}s</button>
+            <div id="${category.id}" onclick="loadCategoryPetsLoading(${category.id})" class="category-btn flex gap-2 items-center justify-center border px-12 py-3 rounded-md ">
+                <img class="w-8" src=${category.category_icon}/>
+                <button   class="category-btn text-2xl font-semibold ">${category.category}s</button>
             </div>
         `;
         categoryContainer.append(buttonContainer);
@@ -74,28 +128,29 @@ const displayCategories = (categories) => {
 const displayAllPets = (data) => {
     const petsContainer = document.getElementById('pets-container');
     petsContainer.innerHTML = '';
-    if (data.length == 0) {
+
+    if (data.length === 0) {
         petsContainer.classList.remove('grid');
         petsContainer.innerHTML = `
             <div class="bg-base-200 flex flex-col items-center justify-center p-5 md:p-20 rounded-xl space-y-4 md:space-y-10">
                 <img src="./images/error.webp" />
                 <h3 class="text-3xl text-center">No Information Available</h3>
-                <p class="font-light text-gray-600 text-center">It is a long established fact that a reader will be distracted by the readable content of a page when looking at 
-                    its layout. The point of using Lorem Ipsum is that it has a.</p>
+                <p class="font-light text-gray-600 text-center">
+                    It is a long established fact that a reader will be distracted by the readable content of a page when looking at 
+                    its layout. The point of using Lorem Ipsum is that it has a.
+                </p>
             </div>
-
         `;
     }
     else {
-        document.getElementById('best-deal').innerHTML = `
-            <h2 class="text-xl font-extrabold">Best Deal For you</h2>
-            <button class="btn pet-btn-primary hover:text-gray-800">Sort by Price</button>
-        `;
+
         petsContainer.classList.add('grid');
+
     }
+
+
     data.forEach(item => {
         const card = document.createElement('div');
-
         card.innerHTML = `
             <div class="card bg-base-100 border rounded-2xl px-3 py-3">
                 <figure class="mb-2">
@@ -121,19 +176,23 @@ const displayAllPets = (data) => {
                     </span>
                     <hr class="border-1 my-2">
                     <div class="card-actions flex justify-between">
-                        <button onclick="displayLikedPicture(${item.petId})" class="btn border  rounded-lg px-2 md:px-4"><img class="w-5 md:w-8" src="https://img.icons8.com/?size=100&id=CdM0CVTrcHP0&format=png&color=000000"/></button>
-                        <button onclick="displayAdoptionModal()" id="${item.petId}" class="btn  text-xl md:text-2xl pet-text-primary font-bold border rounded-lg px-2 md:px-4 py-1">Adopt</button>
-                        <button onclick="showDetails(${item.petId})" class="btn text-xl md:text-2xl pet-text-primary font-bold border rounded-lg px-2 md:px-4 py-1">Details</button>
+                        <button onclick="displayLikedPicture(${item.petId})" class="btn border rounded-lg px-2 md:px-4">
+                            <img class="w-5" src="https://img.icons8.com/?size=100&id=CdM0CVTrcHP0&format=png&color=000000"/>
+                        </button>
+
+                        <button onclick="displayAdoptionModal('${item.petId}')" id="${item.petId}" class="btn text-xl md:px-4 pet-text-primary font-bold border rounded-lg px-2 ">Adopt</button>
+
+                        <button onclick="showDetails(${item.petId})" class="btn text-xl  pet-text-primary font-bold border rounded-lg px-2 md:px-4">
+                            Details
+                        </button>
                     </div>
                 </div>
             </div>
         `;
-
         petsContainer.append(card);
-        
-
-    })
+    });
 };
+
 
 const showDetails = async (petId) => {
     const response = await fetch(`https://openapi.programming-hero.com/api/peddy/pet/${petId}`);
@@ -144,9 +203,9 @@ const showDetails = async (petId) => {
     const modalContainer = document.getElementById('modal-container');
     modalContainer.innerHTML = `
         <dialog id="my_modal" class="modal ">
-            <div class="modal-box max-h-screen w-auto max-w-2xl ">
+            <div class="modal-box max-h-screen w-auto max-w-lg ">
                 <figure class="mb-2 flex justify-center h-5/6 items-center">
-                    <img src=${image} alt="Pets"  class="rounded-xl w-full object-cover" />
+                    <img src=${image} alt="Pets"  class="rounded-xl w-full " />
                 </figure>
                 <div class="">
                     <h2 class="text-xl font-bold">${pet_name}</h2>
@@ -178,20 +237,24 @@ const showDetails = async (petId) => {
                 <p class="font-bold">Details Information</p>
                 <p class="text-gray-600 font-light">${pet_details}</p>
                 <div class="my-2">
-                    <form id="click-form" method="dialog flex">
-                        <!-- if there is a button, it will close the modal -->
-                        <button  class="btn w-full pet-text-primary modal-border bg-[#0e79814d]">Close</button>
-                    </form>
+                    <button class="btn w-full pet-text-primary modal-border bg-[#0e79814d]" id="close-button">Close</button>
                 </div>
+
             </div>
         </dialog>
     `;
 
+    document.getElementById('close-button').addEventListener('click', () => {
+        const modal = document.getElementById('my_modal');
+        modal.close(); // Close the modal
+    });
+    
+
     my_modal.showModal();
 }
 
-const displayAdoptionModal = () => {
-    
+const displayAdoptionModal = (buttonId) => {
+
     const adoptionModalContainer = document.getElementById('adoption-modal-container');
     adoptionModalContainer.innerHTML = `
         <dialog id="adoption_modal" class="modal">
@@ -200,37 +263,45 @@ const displayAdoptionModal = () => {
                     <img class="w-full" src="./icons/handshake.gif" /> 
                 </div>
                 <h3 class="text-4xl font-bold">Congrats!</h3>
-                <p class="py-4">Adoption Progress is Start For Your Pet</p>
-                <div id="count-down" class="text-6xl font-bold">  
-                </div>
+                <p class="py-4">Adoption Progress is Starting for Your Pet</p>
+                <div id="count-down" class="text-6xl font-bold"></div>
             </div>
         </dialog>
     `;
+
     const countDown = document.getElementById('count-down');
     let count = 3;
 
     const countStart = setInterval(() => {
         countDown.textContent = count;
-        
-        if(count === 0){
-            clearInterval(countStart)
+        if (count === 1) {
+            clearInterval(countStart);
         }
-        
-        count --;
-
+        count--;
     }, 1000);
 
-    adoption_modal.showModal();
+    const adoptionModal = document.getElementById('adoption_modal');
+    adoptionModal.showModal();
+
     setTimeout(() => {
         closeAdoptionModal();
-    }, 4000);
+        disableAdoptButton(buttonId);
+    }, 3000);
+};
 
-}
-
-const closeAdoptionModal = () =>{
+const closeAdoptionModal = () => {
     const adoptionModalContainer = document.getElementById('adoption-modal-container');
     adoptionModalContainer.innerHTML = '';
-}
+};
+
+const disableAdoptButton = (buttonId) => {
+    const button = document.getElementById(buttonId);
+
+    if (button) {
+        button.classList.add('disabled');
+        button.innerHTML = "Adopted";
+    }
+};
 
 const displayLikedPicture = async (petId) => {
     const response = await fetch(`https://openapi.programming-hero.com/api/peddy/pet/${petId}`);
@@ -248,8 +319,3 @@ const displayLikedPicture = async (petId) => {
 
 
 loadPage();
-
-
-// const viewMoreBtn = document.getElementById('view-more').addEventListener('click', () =>{
-//     window.location.hash = 'main-content'
-// })
