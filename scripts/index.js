@@ -60,7 +60,7 @@ const sortPetsByPrice = () => {
         const priceB = b.price ? parseFloat(b.price) : Infinity;
         return priceB - priceA; // Ascending order
     });
-    console.log(sortedPets);
+
     displayAllPets(sortedPets);
 }
 
