@@ -230,7 +230,6 @@ const showDetails = async (petId) => {
                             <img src="./icons/gender.svg" />
                             Vaccinated status: ${vaccinated_status ? vaccinated_status : 'N/A'} 
                         </span>    
-
                     </div>
                 
                 <hr class="border-2 my-3">
@@ -249,12 +248,10 @@ const showDetails = async (petId) => {
         modal.close(); // Close the modal
     });
     
-
     my_modal.showModal();
 }
 
 const displayAdoptionModal = (buttonId) => {
-
     const adoptionModalContainer = document.getElementById('adoption-modal-container');
     adoptionModalContainer.innerHTML = `
         <dialog id="adoption_modal" class="modal">
