@@ -2,7 +2,7 @@ const loadPage = () => {
     document.getElementById('loading').classList.remove('hidden');
     setTimeout(() => {
         loadCategories();
-        loadAllPets(); f
+        loadAllPets();
     }, 1000)
 }
 const loadCategories = async () => {
@@ -18,11 +18,23 @@ const loadAllPets = async () => {
     displayAllPets(data.pets);
 }
 
+
+
 const loadCategoryPets = async (id) => {
+    const activeBtn = document.getElementById(id);
+
     const response = await fetch(`https://openapi.programming-hero.com/api/peddy/category/${id == 1 ? 'cat' : id == 2 ? 'dog' : id == 3 ? 'rabbit' : id == 4 ? 'bird' : ''}`);
     const data = await response.json();
+
+    removeActiveClass();
+
+    activeBtn.classList.add('rounded-full');
+    activeBtn.classList.add('bg-[#0e79814d]');
+    activeBtn.classList.add('modal-border');
     document.getElementById('loading').classList.add('hidden');
     displayAllPets(data.data);
+
+    
 }
 
 const loadCategoryPetsLoading = (id) => {
@@ -32,13 +44,24 @@ const loadCategoryPetsLoading = (id) => {
     }, 2000);
 };
 
+const removeActiveClass = () =>{
+    const buttons = document.getElementsByClassName('category-btn');
+
+    for(let btn of buttons){
+        btn.classList.remove('rounded-full');
+        btn.classList.remove('bg-[#0e79814d]');
+        btn.classList.remove('modal-border');
+
+    }
+};
+
 const displayCategories = (categories) => {
     const categoryContainer = document.getElementById('category-container');
     categories.forEach(item => {
         // create button
         const buttonContainer = document.createElement('div');
         buttonContainer.innerHTML = `
-            <div id="${item.id}" onclick="loadCategoryPetsLoading(${item.id})" class="flex gap-2 items-center justify-center border px-12 py-3 rounded-md ">
+            <div id="${item.id}" onclick="loadCategoryPetsLoading(${item.id})" class="category-btn flex gap-2 items-center justify-center border px-12 py-3 rounded-md ">
                 <img class="w-8" src=${item.category_icon}/>
                 <button   class="category-btn text-2xl font-semibold ">${item.category}s</button>
             </div>
@@ -51,14 +74,14 @@ const displayCategories = (categories) => {
 const displayAllPets = (data) => {
     const petsContainer = document.getElementById('pets-container');
     petsContainer.innerHTML = '';
-    const likedPetsContainer = document.getElementById('liked-pets');
-
     if (data.length == 0) {
-        document.getElementById('best-deal').innerHTML = '';
         petsContainer.classList.remove('grid');
         petsContainer.innerHTML = `
-            <div>
-                <h1>No Data Found</h1>
+            <div class="bg-base-200 flex flex-col items-center justify-center p-5 md:p-20 rounded-xl space-y-4 md:space-y-10">
+                <img src="./images/error.webp" />
+                <h3 class="text-3xl text-center">No Information Available</h3>
+                <p class="font-light text-gray-600 text-center">It is a long established fact that a reader will be distracted by the readable content of a page when looking at 
+                    its layout. The point of using Lorem Ipsum is that it has a.</p>
             </div>
 
         `;
@@ -73,7 +96,6 @@ const displayAllPets = (data) => {
     data.forEach(item => {
         const card = document.createElement('div');
 
-        // console.log(item.petId)
         card.innerHTML = `
             <div class="card bg-base-100 border rounded-2xl px-3 py-3">
                 <figure class="mb-2">
@@ -226,3 +248,8 @@ const displayLikedPicture = async (petId) => {
 
 
 loadPage();
+
+
+// const viewMoreBtn = document.getElementById('view-more').addEventListener('click', () =>{
+//     window.location.hash = 'main-content'
+// })

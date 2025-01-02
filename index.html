@@ -62,7 +62,7 @@
         </nav>
         <!-- Banner -->
         <section class="banner">
-            <div class="hero  hidden">
+            <div class="hero ">
                 <div class="hero-content text-center">
                     <div class="max-w-2xl">
                         <p class="text-xl font-medium text-gray-500 mb-2">Bringing Families Together❤️‍🔥</p>
@@ -71,7 +71,9 @@
                             It is a long established fact that a reader will be distracted by the readable content of a
                             page when looking at its layout. The point of using Lorem Ipsum is that it has a.
                         </p>
-                        <button class="btn pet-btn-primary hover:text-gray-800">View More</button>
+                        <a href="#main-content">
+                            <button  class="btn pet-btn-primary hover:text-gray-800">View More</button>
+                        </a>
                         <img class="mt-4" src="./images/pet.webp" alt="">
                     </div>
                 </div>
@@ -82,10 +84,10 @@
     <main class="md:container px-5 lg:px-10 mx-auto">
         <!-- pets section -->
         <!-- Categories -->
-        <section class=" text-center mx-auto ">
+        <section id="main-content" class=" text-center mx-auto ">
             <div class="max-w-2xl mx-auto">
                 <h2 class="text-4xl font-extrabold mb-2">Adopt Your Best Friend</h2>
-                <p class="text-base text-gray-600">It is a long established fact that a reader will be distracted by the
+                <p class="text-base text-gray-600 mb-5">It is a long established fact that a reader will be distracted by the
                     readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has
                     a.</p>
             </div>
@@ -102,7 +104,9 @@
             <button class="btn pet-btn-primary hover:text-gray-800">Sort by Price</button>
         </section>
 
-        <section class="flex gap-5">
+
+        <!-- Pets container -->
+        <section class="flex gap-5 my-10">
             <div class="w-3/4 border rounded-xl p-1 md:p-2">
                 <section class=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 " id="pets-container">
                 </section>
